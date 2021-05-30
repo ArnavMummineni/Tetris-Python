@@ -210,33 +210,6 @@ tetromino_list = [t for t in list(tetromino_shapes.keys()) if t]
 
 
 
-def get_random_tetromino():
-    type_ = random.randrange(len(tetromino_list))
-    name = tetromino_shapes.get(tetromino_list[type_])
-    if name is None:
-        tetromino_list.remove(name)
-        return get_random_tetromino()
-    return get_tetromino_instance_from_name(tetromino_list[type_])
-
-
-def get_randomized_bag():
-    bag = tetromino_list.copy()
-    random.shuffle(bag)
-    for index, name in enumerate(bag):
-        bag[index] = get_tetromino_instance_from_name(name)
-    return bag
-
-
-def get_tetromino_instance_from_name(name):
-    if tetromino_shapes[name].get('class') is not None:
-        kwargs = tetromino_shapes[name].get('kwargs')
-        kwargs = {} if kwargs is None else kwargs
-        return tetromino_shapes[name].get('class')(**kwargs)
-    if tetromino_shapes[name].get('blocks') is not None:
-        return Tetromino(**{**tetromino_shapes[name], 'name': name})
-    return None
-
-
 def remove_line(line_index):
     pf[:, 1:line_index + 1] = pf[:, :line_index]
     pf[:, 0] = None
@@ -250,6 +223,34 @@ class GhostTetromino():
 
 
 class Tetromino():
+
+    @staticmethod
+    def get_random_tetromino():
+        type_ = random.randrange(len(tetromino_list))
+        name = tetromino_shapes.get(tetromino_list[type_])
+        if name is None:
+            tetromino_list.remove(name)
+            return Tetromino.get_random_tetromino()
+        return Tetromino.get_tetromino_instance_from_name(tetromino_list[type_])
+
+    @staticmethod
+    def get_randomized_bag():
+        bag = tetromino_list.copy()
+        random.shuffle(bag)
+        for index, name in enumerate(bag):
+            bag[index] = Tetromino.get_tetromino_instance_from_name(name)
+        return bag
+
+    @staticmethod
+    def get_tetromino_instance_from_name(name):
+        if tetromino_shapes[name].get('class') is not None:
+            kwargs = tetromino_shapes[name].get('kwargs')
+            kwargs = {} if kwargs is None else kwargs
+            return tetromino_shapes[name].get('class')(**kwargs)
+        if tetromino_shapes[name].get('blocks') is not None:
+            return Tetromino(**{**tetromino_shapes[name], 'name': name})
+        return None
+    
     def __init__(
             self,
             blocks,
