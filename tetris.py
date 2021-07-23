@@ -449,7 +449,7 @@ if __name__ == '__main__':
     
     def next_piece(bag):
         if len(bag) == 0:
-            bag = get_randomized_bag()
+            bag = Tetromino.get_randomized_bag()
         piece = bag.pop(0)
         if not piece.draw(): end()
         return piece, bag
@@ -506,9 +506,8 @@ if __name__ == '__main__':
         if hold is not None:
             print('Hold:', hold.name)
         while len(bag) <= 3:
-            bag += get_randomized_bag()
+            bag += Tetromino.get_randomized_bag()
         print(f'Next 3 pieces: {bag[0].name}, {bag[1].name}, and {bag[2].name}')
-
     
     while not game_over:
         
