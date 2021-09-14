@@ -128,6 +128,27 @@ default_wall_kicks = {
     }
 }
 
+'''
+amongus
+tetromino_shapes = {
+    None: {
+        'color': pf_background,
+        'renderer': lambda *args: brick(None, color=pf_background, shaded=False),
+    },
+    'A': {
+        'blocks': [
+            [0, 1, 1, 1, 0],
+            [1, 1, 0, 0, 1],
+            [1, 1, 0, 0, 1],
+            [1, 1, 1, 1, 1],
+            [0, 1, 1, 1, 0],
+            [0, 1, 0, 1, 0],
+        ],
+        'color': colors['red'],
+    },
+}
+'''
+
 tetromino_shapes = {
     None: {
         'color': pf_background,
