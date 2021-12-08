@@ -57,7 +57,7 @@ def brick(tetromino, *args, shaded=True, **kwargs):
 def default_outline(*args, color=None):
     brick = np.zeros((sf, sf, 3))
     gw = ghost_width = sf * ghost_percent // 100
-    brick[:, :] = default_outline_color if color is None else color
+    brick[:, :] = color or default_outline_color
     brick[gw:-gw, gw:-gw] = pf_background
     return brick
 
@@ -245,7 +245,7 @@ class Tetromino():
     def get_tetromino_instance_from_name(name):
         if tetromino_shapes[name].get('class') is not None:
             kwargs = tetromino_shapes[name].get('kwargs')
-            kwargs = {} if kwargs is None else kwargs
+            kwargs = kwargs or {}
             return tetromino_shapes[name].get('class')(**kwargs)
         if tetromino_shapes[name].get('blocks') is not None:
             return Tetromino(**{**tetromino_shapes[name], 'name': name})
@@ -268,9 +268,9 @@ class Tetromino():
         self.rotation = 0
         self.max_rotations = max_rotations
         self.renderer = renderer
-        self.color = default_color if color is None else color
+        self.color = color or default_color
         self.ghost = GhostTetromino(self)
-        self.name = 'Unnamed' if name is None else name
+        self.name = name or 'Unnamed'
         self.kwargs = kwargs
         self.original = deepcopy(self)
 
@@ -281,7 +281,7 @@ class Tetromino():
         return self._rotate_for_kicks(-1, 'ccw', draw)
 
     def _rotate_for_kicks(self, id_change, kick_id, draw=None):
-        draw = self.drawn if draw is None else draw
+        draw = draw or self.drawn
         after = np.rot90(self.blocks, axes=(1, 0), k=id_change)
         for kick in self.kicks[kick_id][self.rotation]:
             #print('kick:', kick)
@@ -309,7 +309,7 @@ class Tetromino():
         return {pos for pos in end if pos not in start}
 
     def _confirm_changes(self, start, end, offset, draw=None):
-        draw = self.drawn if draw is None else draw
+        draw = draw or self.drawn
         additions = self._get_block_changes(start, end, offset)
         if all(self._rel_pixel_isempty(addition) for addition in additions):
             if draw:
@@ -336,7 +336,7 @@ class Tetromino():
     def _get_abs_pixel(self, offset, offset_y=None, pos=None):
         if offset_y is None: offset_x, offset_y = offset
         else: offset_x, offset_y = offset, offset_y
-        pos = self.position if pos is None else pos
+        pos = pos or self.position
         return pos[0]+offset_x, pos[1]+offset_y
     
     def draw(self, erase=False):
