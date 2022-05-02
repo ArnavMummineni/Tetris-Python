@@ -49,8 +49,8 @@ def brick(tetromino, *args, shaded=True, **kwargs):
         return brick
     if not (color == (color * shade_factor)).all():
         for i in range(1, shadow_thickness + 1):
-            brick[i:, 16-i] = color * shade_factor
-            brick[16-i, i:] = color * shade_factor
+            brick[i:, sf-i] = color * shade_factor
+            brick[sf-i, i:] = color * shade_factor
     return brick
 
 
@@ -71,6 +71,7 @@ def fill_random():
     for i in range(pf.shape[0]):
         for j in range(pf.shape[1]):
             pf[i, j] = colors[color_names[random.randrange(len(color_names))]]
+    return brick
 
 #Borken
 def rainbow(*args):
@@ -78,6 +79,7 @@ def rainbow(*args):
     brick = np.zeros((sf, sf, 3))
     for i in range(sf):
         brick[i, :] = np.array([offset + (10 * i)] * 3)
+    return brick
 
 
 colors = {
@@ -94,7 +96,7 @@ colors = {
 
 color_names = list(colors.keys())
 
-sf = 16
+sf = 32
 shade_factor = 0.7
 shadow_thickness = 3
 ghost_percent = 15
@@ -337,7 +339,7 @@ class Tetromino():
         else: offset_x, offset_y = offset, offset_y
         pos = self.position if pos is None else pos
         return pos[0]+offset_x, pos[1]+offset_y
-    
+
     def draw(self, erase=False):
         blocks = tuple(zip(*np.where(self.blocks)[::-1]))
         self.drawn = not bool(erase)
