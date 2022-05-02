@@ -57,7 +57,7 @@ def brick(tetromino, *args, shaded=True, **kwargs):
 def default_outline(*args, color=None):
     brick = np.zeros((sf, sf, 3))
     gw = ghost_width = sf * ghost_percent // 100
-    brick[:, :] = color or default_outline_color
+    brick[:, :] = default_outline_color if color is None else color
     brick[gw:-gw, gw:-gw] = pf_background
     return brick
 
@@ -244,8 +244,7 @@ class Tetromino():
     @staticmethod
     def get_tetromino_instance_from_name(name):
         if tetromino_shapes[name].get('class') is not None:
-            kwargs = tetromino_shapes[name].get('kwargs')
-            kwargs = kwargs or {}
+            kwargs = tetromino_shapes[name].get('kwargs', {})
             return tetromino_shapes[name].get('class')(**kwargs)
         if tetromino_shapes[name].get('blocks') is not None:
             return Tetromino(**{**tetromino_shapes[name], 'name': name})
@@ -268,7 +267,7 @@ class Tetromino():
         self.rotation = 0
         self.max_rotations = max_rotations
         self.renderer = renderer
-        self.color = color or default_color
+        self.color = default_color if color is None else color
         self.ghost = GhostTetromino(self)
         self.name = name or 'Unnamed'
         self.kwargs = kwargs
@@ -336,7 +335,7 @@ class Tetromino():
     def _get_abs_pixel(self, offset, offset_y=None, pos=None):
         if offset_y is None: offset_x, offset_y = offset
         else: offset_x, offset_y = offset, offset_y
-        pos = pos or self.position
+        pos = self.position if pos is None else pos
         return pos[0]+offset_x, pos[1]+offset_y
     
     def draw(self, erase=False):
